@@ -1,10 +1,10 @@
 from backend.db import get_connection
 
-def add_product(name, price, unit, stock=0, discount=0):
+def add_product(name, price, unit, stock=0, discount=0, image_url=None):
     conn = get_connection()
     conn.execute(
-        "INSERT INTO products (name, price, unit, stock, discount) VALUES (?, ?, ?, ?, ?)",
-        (name, price, unit, stock, discount)
+        "INSERT INTO products (name, price, unit, stock, discount, image_url) VALUES (?, ?, ?, ?, ?, ?)",
+        (name, price, unit, stock, discount, image_url)
     )
     conn.commit()
     conn.close()
@@ -29,13 +29,26 @@ def get_product(product_id):
     conn.close()
     return product
 
-def update_product(product_id, name, price, unit, stock, discount):
+def update_product(product_id, name, price, unit, stock, discount, image_url=None, remove_image=False):
     conn = get_connection()
-    conn.execute("""
-        UPDATE products
-        SET name = ?, price = ?, unit = ?, stock = ?, discount = ?
-        WHERE product_id = ?
-    """, (name, price, unit, stock, discount, product_id))
+    if remove_image:
+        conn.execute("""
+            UPDATE products
+            SET name = ?, price = ?, unit = ?, stock = ?, discount = ?, image_url = NULL
+            WHERE product_id = ?
+        """, (name, price, unit, stock, discount, product_id))
+    elif image_url is not None:
+        conn.execute("""
+            UPDATE products
+            SET name = ?, price = ?, unit = ?, stock = ?, discount = ?, image_url = ?
+            WHERE product_id = ?
+        """, (name, price, unit, stock, discount, image_url, product_id))
+    else:
+        conn.execute("""
+            UPDATE products
+            SET name = ?, price = ?, unit = ?, stock = ?, discount = ?
+            WHERE product_id = ?
+        """, (name, price, unit, stock, discount, product_id))
     conn.commit()
     conn.close()
 

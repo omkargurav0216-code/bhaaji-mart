@@ -43,6 +43,26 @@ app = Flask(
 
 app.secret_key = 'super_secret_key_for_grocery_store_app' # Required for session
 
+import uuid
+from werkzeug.utils import secure_filename
+
+UPLOAD_FOLDER = os.path.join(app.static_folder, 'uploads', 'products')
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'webp'}
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def delete_old_product_image(product_id):
+    product = get_product(product_id)
+    if product and product['image_url']:
+        old_path = os.path.join(app.static_folder, product['image_url'])
+        if os.path.exists(old_path):
+            try:
+                os.remove(old_path)
+            except Exception as e:
+                logger.error(f"Error removing old product image: {e}")
+
 # Flask-Login Setup
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -324,12 +344,29 @@ def sales_analytics():
 @admin_required
 def products():
     if request.method == "POST":
+        file = request.files.get('product_image')
+        image_url = None
+        
+        if file and file.filename != '':
+            if allowed_file(file.filename):
+                os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+                filename = secure_filename(file.filename)
+                ext = filename.rsplit('.', 1)[1].lower()
+                unique_filename = f"{uuid.uuid4().hex}.{ext}"
+                file_path = os.path.join(UPLOAD_FOLDER, unique_filename)
+                file.save(file_path)
+                image_url = f"uploads/products/{unique_filename}"
+            else:
+                flash("Invalid file format. Allowed formats: PNG, JPG, JPEG, WEBP.")
+                return redirect("/products")
+
         add_product(
             request.form["name"],
             request.form["price"],
             request.form["unit"],
             float(request.form.get("stock", 0)), # type: ignore
-            float(request.form.get("discount", 0)) # type: ignore
+            float(request.form.get("discount", 0)), # type: ignore
+            image_url=image_url
         )
         return redirect("/products?success=product_added")
 
@@ -408,6 +445,7 @@ def cancel_order(order_id):
 @app.route("/delete_product/<int:product_id>")
 @admin_required
 def remove_product(product_id):
+    delete_old_product_image(product_id)
     delete_product(product_id)
     return redirect("/products")
 
@@ -415,13 +453,35 @@ def remove_product(product_id):
 @admin_required
 def edit_product(product_id):
     if request.method == "POST":
+        remove_image = request.form.get("remove_image") == "true"
+        file = request.files.get("product_image")
+        image_url = None
+        
+        if remove_image or (file and file.filename != ''):
+            delete_old_product_image(product_id)
+            
+        if file and file.filename != '':
+            if allowed_file(file.filename):
+                os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+                filename = secure_filename(file.filename)
+                ext = filename.rsplit('.', 1)[1].lower()
+                unique_filename = f"{uuid.uuid4().hex}.{ext}"
+                file_path = os.path.join(UPLOAD_FOLDER, unique_filename)
+                file.save(file_path)
+                image_url = f"uploads/products/{unique_filename}"
+            else:
+                flash("Invalid file format. Allowed formats: PNG, JPG, JPEG, WEBP.")
+                return redirect(url_for('edit_product', product_id=product_id))
+
         update_product(
             product_id,
             request.form["name"],
             request.form["price"],
             request.form["unit"],
             float(request.form.get("stock", 0)),
-            float(request.form.get("discount", 0))
+            float(request.form.get("discount", 0)),
+            image_url=image_url,
+            remove_image=remove_image
         )
         return redirect("/products")
 

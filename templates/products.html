@@ -14,7 +14,7 @@
         <div class="card inventory-form-card">
             <h3 class="card-title">Add New Item</h3>
 
-            <form action="/products" method="POST">
+            <form action="/products" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label>Product Name</label>
                     <input type="text" name="name" placeholder="e.g. Baigan" required>
@@ -42,6 +42,11 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label>Product Image</label>
+                    <input type="file" name="product_image" accept=".png, .jpg, .jpeg, .webp">
+                </div>
+
                 <button type="submit" class="btn btn-block">Add to Inventory</button>
             </form>
         </div>
@@ -53,6 +58,7 @@
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Image</th>
                         <th>Product</th>
                         <th>Unit</th>
                         <th>Stock</th>
@@ -66,6 +72,15 @@
                     {% set final_price = product.price * (1 - product.discount / 100) %}
                     <tr>
                         <td class="muted-cell">#{{ product.product_id }}</td>
+                        <td>
+                            <div class="product-thumbnail-wrapper">
+                                {% if product.image_url %}
+                                <img src="{{ url_for('static', filename=product.image_url) }}" alt="{{ product.name }}" class="product-thumbnail" loading="lazy">
+                                {% else %}
+                                <span class="placeholder-thumbnail">No Image</span>
+                                {% endif %}
+                            </div>
+                        </td>
                         <td>
                             <strong>{{ product.name }}</strong>
                             {% if product.discount > 0 %}
@@ -100,7 +115,7 @@
                     {% endfor %}
                     {% else %}
                     <tr>
-                        <td colspan="6">
+                        <td colspan="7">
                             <div class="empty-state">
                                 <h3>No products in inventory.</h3>
                                 <p>Add the first grocery item from the form on the left.</p>
@@ -113,4 +128,31 @@
         </div>
     </div>
 </div>
+<style>
+    .product-thumbnail-wrapper {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #f3f4f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #e5e7eb;
+    }
+
+    .product-thumbnail {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .placeholder-thumbnail {
+        font-size: 0.72em;
+        color: #9ca3af;
+        text-align: center;
+        font-weight: 500;
+        line-height: 1.2;
+    }
+</style>
 {% endblock %}

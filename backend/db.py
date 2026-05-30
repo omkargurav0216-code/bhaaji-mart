@@ -25,9 +25,16 @@ def create_tables():
         price REAL NOT NULL,
         unit TEXT NOT NULL,
         stock REAL NOT NULL DEFAULT 0 CHECK(stock >= 0),
-        discount REAL NOT NULL DEFAULT 0 CHECK(discount >= 0 AND discount <= 100)
+        discount REAL NOT NULL DEFAULT 0 CHECK(discount >= 0 AND discount <= 100),
+        image_url TEXT
     )
     """)
+
+    product_columns = {
+        row["name"] for row in cursor.execute("PRAGMA table_info(products)").fetchall()
+    }
+    if "image_url" not in product_columns:
+        cursor.execute("ALTER TABLE products ADD COLUMN image_url TEXT")
 
     # ORDERS TABLE
     cursor.execute("""
@@ -186,6 +193,7 @@ def get_cart_items(user_id):
                p.unit,
                p.stock,
                p.discount,
+               p.image_url,
                (p.price * (1 - p.discount / 100)) AS final_price,
                (p.price * (1 - p.discount / 100) * c.quantity) AS total
         FROM cart c

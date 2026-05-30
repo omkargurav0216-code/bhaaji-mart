@@ -10,7 +10,7 @@
     <div class="card">
         <h2 style="margin-top: 0; margin-bottom: 20px;">Edit Product #{{ product.product_id }}</h2>
 
-        <form action="/edit_product/{{ product.product_id }}" method="POST">
+        <form action="/edit_product/{{ product.product_id }}" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label>Product Name</label>
                 <input type="text" name="name" value="{{ product.name }}" required>
@@ -38,7 +38,26 @@
                 </div>
             </div>
 
-            <div style="margin-top: 10px;">
+            {% if product.image_url %}
+            <div class="form-group" style="margin-top: 20px;">
+                <label>Current Image</label>
+                <div style="display: flex; align-items: center; gap: 15px; background: #f9fafb; padding: 10px; border-radius: 8px; border: 1px solid #e5e7eb; margin-top: 5px;">
+                    <img src="{{ url_for('static', filename=product.image_url) }}" alt="{{ product.name }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
+                    <div>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #ef4444; font-weight: 600; margin-bottom: 0;">
+                            <input type="checkbox" name="remove_image" value="true"> Remove Current Image
+                        </label>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="form-group" style="margin-top: 20px; margin-bottom: 20px;">
+                <label>Replace / Upload Image</label>
+                <input type="file" name="product_image" accept=".png, .jpg, .jpeg, .webp" style="margin-top: 5px;">
+            </div>
+
+            <div style="margin-top: 20px;">
                 <button type="submit" class="btn btn-block">All Changes Correct // Save</button>
             </div>
         </form>
