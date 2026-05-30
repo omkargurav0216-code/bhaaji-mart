@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header flex-between">
+    <div>
+        <h2 class="page-title">Orders Management</h2>
+        <p class="page-subtitle">Review all customer orders and update delivery progress.</p>
+    </div>
+    <span class="tag">{{ orders|length }} orders</span>
+</div>
+
+<div class="main-content inventory-panel">
+    <div class="inventory-table-wrap">
+        <table class="inventory-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Items</th>
+                    <th>Date</th>
+                    <th>Payment</th>
+                    <th>Reference</th>
+                    <th>Total</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if orders %}
+                {% for order in orders %}
+                <tr>
+                    <td>#{{ order.order_id }}</td>
+                    <td>
+                        <strong>{{ order.customer_name or order.account_username or "Customer" }}</strong>
+                        <div class="muted-cell">{{ order.customer_address or "No address" }}</div>
+                    </td>
+                    <td style="max-width: 260px;">{{ order.items or "No items" }}</td>
+                    <td>{{ order.order_date }}</td>
+                    <td>
+                        <span class="stock-pill {% if order.payment_status == 'Paid' %}stock-in{% else %}stock-pending{% endif %}">
+                            {{ order.payment_status or "Pending" }}
+                        </span>
+                        {% if order.payment_method %}
+                        <div class="muted-cell">via {{ order.payment_method }}</div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if order.payment_id %}
+                        <span class="payment-reference">{{ order.payment_id }}</span>
+                        {% else %}
+                        <span class="muted-cell">Unpaid</span>
+                        {% endif %}
+                    </td>
+                    <td><span class="tag price-tag">&#8377;{{ "%.2f"|format(order.total_amount or 0) }}</span></td>
+                    <td class="text-right">
+                        <div class="table-actions">
+                            <a href="/order/{{ order.order_id }}" class="btn btn-small btn-muted">View</a>
+                            <a href="/admin/orders/{{ order.order_id }}/cancel"
+                               class="btn btn-small btn-danger"
+                               onclick="return confirm('Clear this order?')">Clear</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="8">
+                        <div class="empty-state">
+                            <h3>No orders found.</h3>
+                            <p>Customer orders will appear here after checkout.</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

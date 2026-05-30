@@ -1,0 +1,5 @@
+Flask
+flask-login
+werkzeug
+gunicorn
+stripe

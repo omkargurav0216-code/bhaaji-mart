@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header flex-between">
+    <div>
+        <h2 class="page-title">{% if analytics_mode %}Sales Analytics{% else %}Admin Dashboard{% endif %}</h2>
+        <p class="page-subtitle">Store-wide order totals and fulfillment status.</p>
+    </div>
+    <a href="/admin/orders" class="btn btn-small">Manage Orders</a>
+</div>
+
+<div class="dashboard-grid">
+    <div class="sidebar">
+        <div class="stat-card">
+            <div class="stat-label">Total Orders</div>
+            <div class="stat-val">{{ orders|length }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Paid Revenue</div>
+            <div class="stat-val" style="font-size: 1.6em;">&#8377;{{ "%.2f"|format(total_sales) }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">System Status</div>
+            <div class="stat-val" style="color: #10b981; font-size: 1.2em;">ONLINE</div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <h3 class="card-title">Payment Overview</h3>
+        <div class="analytics-grid" style="grid-template-columns: repeat(2, minmax(0, 1fr));">
+            <div class="stat-card">
+                <div class="stat-label">Paid Orders</div>
+                <div class="stat-val">{{ orders|length - unpaid_count }}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Unpaid Orders</div>
+                <div class="stat-val">{{ unpaid_count }}</div>
+            </div>
+        </div>
+
+        <h3 class="card-title" style="margin-top: 30px;">Recent Orders</h3>
+        {% if orders %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Payment</th>
+                    <th class="text-right">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders[:5] %}
+                <tr onclick="window.location='/order/{{ order.order_id }}'" style="cursor: pointer;">
+                    <td>#{{ order.order_id }}</td>
+                    <td>{{ order.customer_name or order.account_username or "Customer" }}</td>
+                    <td>{{ order.order_date }}</td>
+                    <td>
+                        <span class="stock-pill {% if order.payment_status == 'Paid' %}stock-in{% else %}stock-pending{% endif %}">
+                            {{ order.payment_status or "Pending" }}
+                        </span>
+                    </td>
+                    <td class="text-right">&#8377;{{ "%.2f"|format(order.total_amount or 0) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <p>No orders currently in the system.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

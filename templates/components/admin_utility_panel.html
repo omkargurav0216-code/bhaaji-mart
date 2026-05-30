@@ -1,0 +1,201 @@
+<!-- Floating Action Button (FAB) -->
+<button id="admin-utility-fab" class="admin-utility-fab" aria-label="Toggle Admin Quick Utilities" title="Quick Utilities">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+        <line x1="8" y1="6" x2="16" y2="6"></line>
+        <line x1="16" y1="14" x2="16" y2="18"></line>
+        <line x1="8" y1="10" x2="10" y2="10"></line>
+        <line x1="8" y1="14" x2="10" y2="14"></line>
+        <line x1="8" y1="18" x2="10" y2="18"></line>
+        <line x1="12" y1="10" x2="14" y2="10"></line>
+        <line x1="12" y1="14" x2="14" y2="14"></line>
+        <line x1="12" y1="18" x2="14" y2="18"></line>
+    </svg>
+</button>
+
+<!-- Utility Panel Modal -->
+<div id="admin-utility-panel" class="admin-utility-panel hidden" role="dialog" aria-labelledby="utility-panel-title" aria-modal="true" tabindex="-1">
+    <!-- Header (Draggable Area) -->
+    <div id="admin-utility-header" class="admin-utility-header">
+        <span class="header-drag-handle">⋮⋮</span>
+        <span id="utility-panel-title" class="admin-utility-title">Quick Utilities</span>
+        <div class="admin-utility-header-actions">
+            <button id="admin-utility-minimize" class="header-btn" title="Minimize" aria-label="Minimize panel">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            </button>
+            <button id="admin-utility-close" class="header-btn close-btn" title="Close" aria-label="Close panel">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="admin-utility-tabs" role="tablist">
+        <button class="tab-link active" role="tab" aria-selected="true" aria-controls="calc-tab" id="calc-tab-link">Calc</button>
+        <button class="tab-link" role="tab" aria-selected="false" aria-controls="gst-tab" id="gst-tab-link">GST</button>
+        <button class="tab-link" role="tab" aria-selected="false" aria-controls="discount-tab" id="discount-tab-link">Discount</button>
+        <button class="tab-link" role="tab" aria-selected="false" aria-controls="profit-tab" id="profit-tab-link">Margin</button>
+    </div>
+
+    <!-- Content Panes -->
+    <div class="admin-utility-content">
+        <!-- 1. Calculator Pane -->
+        <div id="calc-tab" class="tab-pane active" role="tabpanel" aria-labelledby="calc-tab-link">
+            <div class="calc-display-container">
+                <div id="calc-expression" class="calc-expression" aria-live="polite"></div>
+                <div id="calc-screen" class="calc-screen" aria-live="polite">0</div>
+            </div>
+            <div class="calc-grid">
+                <!-- Row 1 -->
+                <button class="calc-btn btn-danger" data-val="C">C</button>
+                <button class="calc-btn btn-action" data-val="Backspace" aria-label="Backspace">⌫</button>
+                <button class="calc-btn btn-action" data-val="Copy" title="Copy result" aria-label="Copy result">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </button>
+                <button class="calc-btn btn-operator" data-val="%">%</button>
+
+                <!-- Row 2 -->
+                <button class="calc-btn" data-val="7">7</button>
+                <button class="calc-btn" data-val="8">8</button>
+                <button class="calc-btn" data-val="9">9</button>
+                <button class="calc-btn btn-operator" data-val="/">&divide;</button>
+
+                <!-- Row 3 -->
+                <button class="calc-btn" data-val="4">4</button>
+                <button class="calc-btn" data-val="5">5</button>
+                <button class="calc-btn" data-val="6">6</button>
+                <button class="calc-btn btn-operator" data-val="*">&times;</button>
+
+                <!-- Row 4 -->
+                <button class="calc-btn" data-val="1">1</button>
+                <button class="calc-btn" data-val="2">2</button>
+                <button class="calc-btn" data-val="3">3</button>
+                <button class="calc-btn btn-operator" data-val="-">&minus;</button>
+
+                <!-- Row 5 -->
+                <button class="calc-btn" data-val="0">0</button>
+                <button class="calc-btn" data-val=".">.</button>
+                <button class="calc-btn btn-equal" data-val="=">&equals;</button>
+                <button class="calc-btn btn-operator" data-val="+">&plus;</button>
+            </div>
+        </div>
+
+        <!-- 2. GST Calculator Pane -->
+        <div id="gst-tab" class="tab-pane" role="tabpanel" aria-labelledby="gst-tab-link">
+            <div class="util-form">
+                <div class="util-form-group">
+                    <label for="gst-amount">Amount (&#8377;)</label>
+                    <input type="number" id="gst-amount" class="util-input" placeholder="Enter amount" min="0" step="0.01">
+                </div>
+                <div class="util-form-group">
+                    <label for="gst-rate">GST Rate (%)</label>
+                    <div class="gst-quick-rates">
+                        <button type="button" class="quick-rate-btn" data-rate="5">5%</button>
+                        <button type="button" class="quick-rate-btn" data-rate="12">12%</button>
+                        <button type="button" class="quick-rate-btn active" data-rate="18">18%</button>
+                        <button type="button" class="quick-rate-btn" data-rate="28">28%</button>
+                    </div>
+                    <input type="number" id="gst-rate" class="util-input" value="18" min="0" max="100" step="0.1">
+                </div>
+                <div class="util-form-group">
+                    <label>GST Type</label>
+                    <div class="gst-type-toggle">
+                        <label class="toggle-container">
+                            <input type="radio" name="gst_type" value="exclusive" checked>
+                            <span class="toggle-label">GST Exclusive</span>
+                        </label>
+                        <label class="toggle-container">
+                            <input type="radio" name="gst_type" value="inclusive">
+                            <span class="toggle-label">GST Inclusive</span>
+                        </label>
+                    </div>
+                </div>
+                <hr class="util-divider">
+                <div class="util-results">
+                    <div class="util-result-row">
+                        <span>Net Amount:</span>
+                        <span id="gst-res-net" class="util-res-val">&#8377;0.00</span>
+                    </div>
+                    <div class="util-result-row">
+                        <span>GST Amount:</span>
+                        <span id="gst-res-tax" class="util-res-val">&#8377;0.00</span>
+                    </div>
+                    <div class="util-result-row sub-row">
+                        <span>CGST (Half):</span>
+                        <span id="gst-res-cgst" class="util-res-val">&#8377;0.00</span>
+                    </div>
+                    <div class="util-result-row sub-row">
+                        <span>SGST (Half):</span>
+                        <span id="gst-res-sgst" class="util-res-val">&#8377;0.00</span>
+                    </div>
+                    <div class="util-result-row highlight-row">
+                        <span>Final Price:</span>
+                        <span id="gst-res-total" class="util-res-val">&#8377;0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Discount Calculator Pane -->
+        <div id="discount-tab" class="tab-pane" role="tabpanel" aria-labelledby="discount-tab-link">
+            <div class="util-form">
+                <div class="util-form-group">
+                    <label for="disc-price">Original Price (&#8377;)</label>
+                    <input type="number" id="disc-price" class="util-input" placeholder="Enter original price" min="0" step="0.01">
+                </div>
+                <div class="util-form-group">
+                    <label for="disc-percent">Discount (%)</label>
+                    <input type="number" id="disc-percent" class="util-input" placeholder="Enter discount percent" min="0" max="100" step="0.1">
+                </div>
+                <hr class="util-divider">
+                <div class="util-results">
+                    <div class="util-result-row">
+                        <span>You Save:</span>
+                        <span id="disc-res-save" class="util-res-val discount-saved">&#8377;0.00</span>
+                    </div>
+                    <div class="util-result-row highlight-row">
+                        <span>Final Price:</span>
+                        <span id="disc-res-final" class="util-res-val">&#8377;0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Profit & Margin Calculator Pane -->
+        <div id="profit-tab" class="tab-pane" role="tabpanel" aria-labelledby="profit-tab-link">
+            <div class="util-form">
+                <div class="util-form-group">
+                    <label for="prof-cost">Cost Price (&#8377;)</label>
+                    <input type="number" id="prof-cost" class="util-input" placeholder="Enter cost price" min="0" step="0.01">
+                </div>
+                <div class="util-form-group">
+                    <label for="prof-sell">Selling Price (&#8377;)</label>
+                    <input type="number" id="prof-sell" class="util-input" placeholder="Enter selling price" min="0" step="0.01">
+                </div>
+                <hr class="util-divider">
+                <div class="util-results">
+                    <div class="util-result-row">
+                        <span>Profit / Loss:</span>
+                        <span id="prof-res-amt" class="util-res-val">&#8377;0.00</span>
+                    </div>
+                    <div class="util-result-row">
+                        <span>Profit markup:</span>
+                        <span id="prof-res-percent" class="util-res-val">0.00%</span>
+                    </div>
+                    <div class="util-result-row highlight-row">
+                        <span>Profit Margin:</span>
+                        <span id="prof-res-margin" class="util-res-val">0.00%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

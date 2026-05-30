@@ -1,0 +1,559 @@
+/* Admin Quick Utility Panel - Design & Layout */
+
+/* Floating Action Button (FAB) */
+.admin-utility-fab {
+    position: fixed;
+    z-index: 9999;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(79, 70, 229, 0.4);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease, background 0.3s ease;
+}
+
+/* FAB Desktop placement */
+@media (min-width: 769px) {
+    .admin-utility-fab {
+        bottom: 24px;
+        right: 24px;
+        width: 56px;
+        height: 56px;
+    }
+}
+
+/* FAB Mobile placement */
+@media (max-width: 768px) {
+    .admin-utility-fab {
+        bottom: 16px;
+        right: 16px;
+        width: 48px;
+        height: 48px;
+    }
+}
+
+.admin-utility-fab:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 24px rgba(79, 70, 229, 0.6), 0 0 12px rgba(236, 72, 153, 0.4);
+}
+
+.admin-utility-fab:active {
+    transform: scale(0.95);
+}
+
+.admin-utility-fab svg {
+    width: 24px;
+    height: 24px;
+    transition: transform 0.3s ease;
+}
+
+.admin-utility-fab:hover svg {
+    transform: rotate(15deg);
+}
+
+/* Modal Popup Container */
+.admin-utility-panel {
+    position: fixed;
+    z-index: 10000;
+    width: 320px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Outfit', sans-serif;
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 0.2s ease, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.admin-utility-panel.hidden {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+    pointer-events: none;
+}
+
+.admin-utility-panel:focus-visible {
+    outline: 2px solid var(--primary);
+}
+
+/* Panel Layout Desktop positioning */
+@media (min-width: 769px) {
+    .admin-utility-panel {
+        bottom: 92px;
+        right: 24px;
+        max-height: 80vh;
+    }
+}
+
+/* Panel Layout Tablet centered positioning */
+@media (min-width: 481px) and (max-width: 768px) {
+    .admin-utility-panel {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(1);
+        bottom: auto;
+        right: auto;
+        width: 340px;
+        max-height: 70vh;
+    }
+    
+    .admin-utility-panel.hidden {
+        transform: translate(-50%, -45%) scale(0.9);
+    }
+}
+
+/* Panel Layout Mobile Bottom Sheet positioning */
+@media (max-width: 480px) {
+    .admin-utility-panel {
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-height: 75vh;
+        border-radius: 20px 20px 0 0;
+        transform: translateY(0);
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+        transition: transform 0.25s cubic-bezier(0.1, 0.76, 0.55, 0.94), opacity 0.25s ease;
+    }
+
+    .admin-utility-panel.hidden {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+}
+
+/* Panel Header */
+.admin-utility-header {
+    background: #ffffff;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #e5e7eb;
+    cursor: move;
+    user-select: none;
+}
+
+.header-drag-handle {
+    color: #9ca3af;
+    font-size: 1.1em;
+    margin-right: 8px;
+    cursor: move;
+}
+
+.admin-utility-title {
+    font-weight: 700;
+    font-size: 0.95em;
+    color: var(--text-main);
+    flex-grow: 1;
+}
+
+.admin-utility-header-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.header-btn {
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-sub);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.header-btn:hover {
+    background: #f3f4f6;
+    color: var(--text-main);
+}
+
+.header-btn.close-btn:hover {
+    background: #fee2e2;
+    color: var(--danger);
+}
+
+.header-btn:focus-visible {
+    outline: 2px solid var(--primary);
+}
+
+/* Panel Tabs */
+.admin-utility-tabs {
+    display: flex;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 2px;
+}
+
+.tab-link {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 8px 4px;
+    font-family: inherit;
+    font-size: 0.8em;
+    font-weight: 600;
+    color: var(--text-sub);
+    cursor: pointer;
+    text-align: center;
+    border-radius: 8px;
+    margin: 2px;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.tab-link:hover {
+    color: var(--text-main);
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.tab-link.active {
+    color: var(--primary);
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.tab-link:focus-visible {
+    outline: 2px solid var(--primary);
+}
+
+/* Content Container */
+.admin-utility-content {
+    padding: 16px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+/* Tab Panes */
+.tab-pane {
+    display: none;
+    animation: fadeInTab 0.18s ease-in-out;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+@keyframes fadeInTab {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Forms & Inputs styling */
+.util-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.util-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.util-form-group label {
+    font-size: 0.8em;
+    font-weight: 600;
+    color: var(--text-sub);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.util-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: var(--input-bg);
+    color: var(--text-main);
+    font-family: inherit;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    box-sizing: border-box;
+}
+
+.util-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+.util-divider {
+    border: 0;
+    height: 1px;
+    background: #e5e7eb;
+    margin: 8px 0;
+}
+
+/* Quick rate chips for GST */
+.gst-quick-rates {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.quick-rate-btn {
+    flex: 1;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 4px 0;
+    font-size: 0.75em;
+    font-weight: 600;
+    color: var(--text-sub);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.quick-rate-btn:hover {
+    background: #e5e7eb;
+    color: var(--text-main);
+}
+
+.quick-rate-btn.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #ffffff;
+}
+
+/* Inclusive / Exclusive Toggle buttons */
+.gst-type-toggle {
+    display: flex;
+    background: #f3f4f6;
+    padding: 3px;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.toggle-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.toggle-container input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-label {
+    width: 100%;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 0.75em;
+    font-weight: 600;
+    color: var(--text-sub);
+    border-radius: 6px;
+    transition: all 0.15s ease;
+}
+
+.toggle-container input[type="radio"]:checked + .toggle-label {
+    background: #ffffff;
+    color: var(--primary);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Outputs & Results display */
+.util-results {
+    background: #f9fafb;
+    border-radius: 10px;
+    padding: 10px 12px;
+    border: 1px solid #f3f4f6;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.util-result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85em;
+    color: var(--text-sub);
+    font-weight: 500;
+}
+
+.util-result-row.sub-row {
+    font-size: 0.78em;
+    padding-left: 10px;
+    color: #9ca3af;
+}
+
+.util-res-val {
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.util-result-row.highlight-row {
+    font-size: 0.95em;
+    border-top: 1px dashed #e5e7eb;
+    padding-top: 8px;
+    margin-top: 4px;
+    color: var(--text-main);
+    font-weight: 700;
+}
+
+.util-result-row.highlight-row .util-res-val {
+    color: var(--primary);
+    font-size: 1.1em;
+}
+
+.discount-saved {
+    color: #10b981; /* Green */
+}
+
+/* Calculator specific styles */
+.calc-display-container {
+    background: #111827;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    min-height: 64px;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.calc-expression {
+    color: #9ca3af;
+    font-size: 0.75em;
+    min-height: 15px;
+    word-break: break-all;
+    text-align: right;
+    font-weight: 500;
+}
+
+.calc-screen {
+    color: #ffffff;
+    font-size: 1.4em;
+    font-weight: 700;
+    width: 100%;
+    text-align: right;
+    word-break: break-all;
+    margin-top: 2px;
+}
+
+.calc-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+}
+
+.calc-btn {
+    border: none;
+    background: #f3f4f6;
+    color: var(--text-main);
+    padding: 12px 0;
+    font-size: 0.95em;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.1s ease;
+    user-select: none;
+}
+
+.calc-btn:hover {
+    background: #e5e7eb;
+    transform: translateY(-1px);
+}
+
+.calc-btn:active {
+    background: #d1d5db;
+    transform: translateY(0);
+}
+
+.calc-btn.btn-operator {
+    background: #e0e7ff;
+    color: var(--primary);
+}
+
+.calc-btn.btn-operator:hover {
+    background: #c7d2fe;
+}
+
+.calc-btn.btn-action {
+    background: #f3f4f6;
+    color: var(--text-sub);
+}
+
+.calc-btn.btn-danger {
+    background: #fee2e2;
+    color: var(--danger);
+}
+
+.calc-btn.btn-danger:hover {
+    background: #fca5a5;
+}
+
+.calc-btn.btn-equal {
+    background: var(--accent);
+    color: #ffffff;
+}
+
+.calc-btn.btn-equal:hover {
+    background: #db2777;
+    box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
+}
+
+.calc-btn:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+}
+
+/* Draggable UI override cursor */
+.dragging {
+    opacity: 0.9;
+    cursor: move;
+}
+
+/* Accessibility focus ring container trap */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* Minimized panel styling */
+.admin-utility-panel.minimized {
+    max-height: 52px !important;
+}
+.admin-utility-panel.minimized .admin-utility-tabs,
+.admin-utility-panel.minimized .admin-utility-content {
+    display: none !important;
+}

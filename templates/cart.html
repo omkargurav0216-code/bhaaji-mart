@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header flex-between">
+    <h2 class="page-title">Shopping Cart</h2>
+    <a href="/new_order" class="btn btn-small btn-muted">Continue Shopping</a>
+</div>
+
+{% if items %}
+<div class="dashboard-grid">
+    <div class="sidebar">
+        <div class="card" style="position: sticky; top: 20px;">
+            <h3 style="margin-top: 0;">Order Summary</h3>
+            <div class="flex-between" style="margin-bottom: 18px;">
+                <span style="font-weight: 600; color: var(--text-sub);">Grand Total</span>
+                <span style="font-size: 1.5em; font-weight: 800; color: var(--primary);">
+                    &#8377;{{ "%.2f"|format(grand_total) }}
+                </span>
+            </div>
+
+            <form action="{{ url_for('checkout') }}" method="POST">
+                <div class="form-group">
+                    <label>Delivery Address</label>
+                    <textarea name="customer_address" rows="4" required placeholder="Enter delivery address"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Select Payment Method</label><br>
+                    <input type="radio" id="pm_stripe" name="payment_method" value="stripe" checked>
+                    <label for="pm_stripe">Pay with Stripe</label><br>
+                    <input type="radio" id="pm_qr" name="payment_method" value="qr">
+                    <label for="pm_qr">Pay with QR Code</label>
+                </div>
+                <button type="submit" class="btn btn-block">Proceed to Pay</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th class="text-right">Total</th>
+                    <th class="text-right">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>
+                        <strong>{{ item.name }}</strong>
+                        <div style="color: var(--text-sub); font-size: 0.85em;">
+                            {{ item.unit }} | In stock: {{ item.stock }}
+                        </div>
+                    </td>
+                    <td>
+                        {% if item.discount > 0 %}
+                        <span style="text-decoration: line-through; color: #999; font-size: 0.9em;">
+                            &#8377;{{ "%.2f"|format(item.price) }}
+                        </span>
+                        <br>
+                        {% endif %}
+                        <span class="tag">&#8377;{{ "%.2f"|format(item.final_price) }}</span>
+                    </td>
+                    <td>
+                        <div class="quantity-control">
+                            <a href="{{ url_for('decrease_quantity', cart_id=item.id) }}" class="btn btn-small btn-muted">-</a>
+                            <span class="quantity-value">{{ item.quantity }}</span>
+                            <a href="{{ url_for('increase_quantity', cart_id=item.id) }}" class="btn btn-small btn-muted">+</a>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <strong>&#8377;{{ "%.2f"|format(item.total) }}</strong>
+                    </td>
+                    <td class="text-right">
+                        <a href="{{ url_for('remove_cart_item', cart_id=item.id) }}" class="btn btn-small btn-danger">
+                            Remove
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="main-content empty-state">
+    <h3>Your cart is empty.</h3>
+    <p>Add products from the customer shopping page to start an order.</p>
+    <a href="/new_order" class="btn">Browse Products</a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="payment-success-hero">
+    <div class="success-mark">✓</div>
+    <div>
+        <h2 class="page-title">Payment Successful</h2>
+        <p class="page-subtitle">Your grocery order has been confirmed and is now being prepared.</p>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="sidebar">
+        <div class="card">
+            <h3 class="card-title">Order Confirmation</h3>
+            <div class="summary-row">
+                <span>Order ID</span>
+                <strong>#{{ order.order_id }}</strong>
+            </div>
+            <div class="summary-row">
+                <span>Total Paid</span>
+                <strong>&#8377;{{ "%.2f"|format(order.total_amount or 0) }}</strong>
+            </div>
+            <div class="summary-row">
+                <span>Payment Method</span>
+                <strong>{{ order.payment_method or "Stripe" }}</strong>
+            </div>
+            <div class="summary-row">
+                <span>Status</span>
+                <span class="stock-pill stock-in">{{ order.payment_status or "Paid" }}</span>
+            </div>
+            <div style="margin-top: 18px;">
+                <div class="muted-cell">Payment Reference</div>
+                <div class="payment-reference">{{ order.payment_id or stripe_session_id }}</div>
+            </div>
+        </div>
+
+        <a href="/my_orders" class="btn btn-block">Go to My Orders</a>
+        <a href="/new_order" class="btn btn-block btn-muted" style="margin-top: 12px;">Continue Shopping</a>
+    </div>
+
+    <div class="main-content">
+        <div class="flex-between" style="border-bottom: 2px solid var(--bg-color); padding-bottom: 18px; margin-bottom: 20px;">
+            <div>
+                <h3 class="card-title">Invoice Summary</h3>
+                <div class="muted-cell">{{ order.order_date }}</div>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 24px;">
+            <div class="muted-cell">Delivery Address</div>
+            <strong>{{ order.customer_address }}</strong>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th class="text-right">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in details %}
+                {% set final_price = item.price * (1 - item.discount / 100) %}
+                {% set line_total = final_price * item.quantity %}
+                <tr>
+                    <td><strong>{{ item.name }}</strong> ({{ item.unit }})</td>
+                    <td>&#8377;{{ "%.2f"|format(final_price) }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td class="text-right">&#8377;{{ "%.2f"|format(line_total) }}</td>
+                </tr>
+                {% endfor %}
+                <tr style="font-weight: 800;">
+                    <td colspan="3" class="text-right">Grand Total</td>
+                    <td class="text-right">&#8377;{{ "%.2f"|format(order.total_amount or 0) }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

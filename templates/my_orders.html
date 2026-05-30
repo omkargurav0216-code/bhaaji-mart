@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header flex-between">
+    <div>
+        <h2 class="page-title">My Orders</h2>
+        <p class="page-subtitle">Track your grocery purchases and delivery status.</p>
+    </div>
+    <a href="/new_order" class="btn btn-small">Shop Products</a>
+</div>
+
+<div class="main-content">
+    {% if orders %}
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Purchased Items</th>
+                <th>Date</th>
+                <th>Payment</th>
+                <th>Reference</th>
+                <th class="text-right">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr onclick="window.location='/order/{{ order.order_id }}'" style="cursor: pointer;">
+                <td>#{{ order.order_id }}</td>
+                <td style="max-width: 320px;">{{ order.items or "No items" }}</td>
+                <td>{{ order.order_date }}</td>
+                <td>
+                    <span class="stock-pill {% if order.payment_status == 'Paid' %}stock-in{% else %}stock-pending{% endif %}">
+                        {{ order.payment_status or "Pending" }}
+                    </span>
+                    {% if order.payment_method %}
+                    <div class="muted-cell">via {{ order.payment_method }}</div>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if order.payment_id %}
+                    <span class="payment-reference">{{ order.payment_id }}</span>
+                    {% else %}
+                    <span class="muted-cell">Not paid yet</span>
+                    {% endif %}
+                </td>
+                <td class="text-right">
+                    <span class="tag">&#8377;{{ "%.2f"|format(order.total_amount or 0) }}</span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+        <h3>No orders yet.</h3>
+        <p>Your completed orders will appear here.</p>
+        <a href="/new_order" class="btn">Browse Products</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
