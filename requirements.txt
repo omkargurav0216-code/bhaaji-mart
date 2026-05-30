@@ -1,5 +1,8 @@
-Flask
-flask-login
-werkzeug
-gunicorn
-stripe
+Flask>=3.0.0
+flask-login>=0.6.3
+stripe>=7.0.0
+qrcode[pil]>=7.4.2
+Pillow>=10.0.0
+werkzeug>=3.0.0
+python-dotenv>=1.0.0
+gunicorn>=21.2.0
