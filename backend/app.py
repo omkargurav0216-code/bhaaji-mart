@@ -398,7 +398,7 @@ def new_order():
                     "product_id": p["product_id"],
                     "name": p["name"],
                     "unit": p["unit"],
-                    "price": p["price"],
+                    "price": p["price"] * (1 - p["discount"] / 100),
                     "quantity": float(qty),
                     "total": p["price"] * (1 - p["discount"] / 100) * float(qty),
                 })
