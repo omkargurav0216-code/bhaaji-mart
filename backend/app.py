@@ -142,7 +142,7 @@ init_db_data()
 def index():
     if current_user.role == 'admin':
         return redirect(url_for('admin_dashboard'))
-    return redirect(url_for('my_orders'))
+    return render_template("home.html")
 
 @app.route("/my_orders")
 @customer_required
@@ -624,7 +624,7 @@ def qr_payment():
     qr_dir = os.path.join(app.static_folder, 'qr')
     os.makedirs(qr_dir, exist_ok=True)
     filename = f"qr_{uuid.uuid4().hex}.png"
-    upi_str = f"upi://pay?pa=grocerydemo@upi&pn=GroceryStore&am={pending['total_amount']:.2f}"
+    upi_str = f"upi://pay?pa=grocerydemo@upi&pn=GreenShelf&am={pending['total_amount']:.2f}"
     try:
         generate_qr_code(upi_str, os.path.join(qr_dir, filename))
         logger.info(f"QR code generated: {filename}")
@@ -742,7 +742,7 @@ def login():
             if user.role == 'admin':
                 return redirect("/admin/dashboard")
             else:
-                return redirect("/new_order")
+                return redirect("/")
         else:
             return render_template("login.html", error="Invalid username or password", is_admin=(role_mode == 'admin'))
             
@@ -779,7 +779,7 @@ def register():
         # Auto login
         user = User(user_id, username, password_hash, 'customer')
         login_user(user)
-        return redirect("/new_order")
+        return redirect("/")
 
     return render_template("register.html")
 

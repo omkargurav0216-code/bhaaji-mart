@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bhaaji Mart</title>
+    <title>GreenShelf</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     {% if current_user.is_authenticated and current_user.role == 'admin' %}
@@ -18,7 +18,7 @@
     <div class="container">
         <!-- Top Navigation Bar -->
         <div class="top-bar">
-            <a href="/" class="logo">Bhaaji Mart</a>
+            <a href="/" class="logo">GreenShelf</a>
             <div class="nav">
                 {% if current_user.is_authenticated %}
                 {% if current_user.role == 'admin' %}

@@ -1,4 +1,4 @@
-# Grocery Management System
+# Grocery Store Management System
 
 A Flask-based Grocery Management System with cart, payments, analytics, and admin dashboard.
 
@@ -51,7 +51,7 @@ git clone https://github.com/omkargurav0216-code/bhaaji-mart.git
 1. Open your terminal.
 2. Navigate to the project directory:
    ```bash
-   cd Grocery_Python06-main
+   cd bhaaji-mart-main
    ```
 3. Create a virtual environment:
    ```bash

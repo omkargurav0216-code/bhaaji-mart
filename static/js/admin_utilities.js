@@ -1,5 +1,5 @@
 /**
- * Bhaaji Mart - Admin Quick Utility Panel JS
+ * GreenShelf - Admin Quick Utility Panel JS
  * Handles panel display, tab toggles, drag-and-drop, calculators, and accessibility features.
  */
 
