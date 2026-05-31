@@ -47,22 +47,26 @@
         <div class="benefits-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;">
             <div class="benefit-card" style="background: var(--surface); padding: 2rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.03); transition: transform 0.3s ease;">
                 <div style="background: rgba(16, 185, 129, 0.1); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
-                    <lord-icon src="https://cdn.lordicon.com/lbsuwgny.json" trigger="hover" colors="primary:#10b981,secondary:#059669" style="width:36px;height:36px;"></lord-icon>
+                    <i data-lucide="leaf"
+   style="width:30px;height:30px;color:#10b981;">
+</i>
                 </div>
                 <h3 style="font-size: 1.25rem; font-weight: 700; margin: 0 0 0.8rem 0; color: var(--text-main);">Fresh Products</h3>
                 <p style="margin: 0; color: var(--text-sub); line-height: 1.6; font-size: 0.95rem;">Every product is inspected by hand. We select only the highest quality organic produce for your shelf.</p>
             </div>
             <div class="benefit-card" style="background: var(--surface); padding: 2rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.03); transition: transform 0.3s ease;">
                 <div style="background: rgba(16, 185, 129, 0.1); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
-                    <lord-icon src="https://cdn.lordicon.com/pjcbxhgg.json" trigger="hover" colors="primary:#10b981,secondary:#059669" style="width:36px;height:36px;"></lord-icon>
-                </div>
+                    <i data-lucide="shield-check"
+   style="width:30px;height:30px;color:#10b981;">
+</i></div>
                 <h3 style="font-size: 1.25rem; font-weight: 700; margin: 0 0 0.8rem 0; color: var(--text-main);">Secure Payments</h3>
                 <p style="margin: 0; color: var(--text-sub); line-height: 1.6; font-size: 0.95rem;">Pay securely using Stripe Card checkout or UPI QR codes. Instant verification guarantees secure ordering.</p>
             </div>
             <div class="benefit-card" style="background: var(--surface); padding: 2rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.03); transition: transform 0.3s ease;">
                 <div style="background: rgba(16, 185, 129, 0.1); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
-                    <lord-icon src="https://cdn.lordicon.com/haxmqqvs.json" trigger="hover" colors="primary:#10b981,secondary:#059669" style="width:36px;height:36px;"></lord-icon>
-                </div>
+                   <i data-lucide="truck"
+   style="width:30px;height:30px;color:#10b981;">
+</i></div>
                 <h3 style="font-size: 1.25rem; font-weight: 700; margin: 0 0 0.8rem 0; color: var(--text-main);">Fast Delivery</h3>
                 <p style="margin: 0; color: var(--text-sub); line-height: 1.6; font-size: 0.95rem;">Contactless delivery right to your door. We ensure safe, clean, and temperature-controlled shipping.</p>
             </div>
@@ -269,6 +273,9 @@
 
 <style>
 /* CSS overrides for responsive and animated landing design elements */
+.benefit-card i[data-lucide] {
+    stroke-width: 2.3;
+}
 .shop-now-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.5) !important;
