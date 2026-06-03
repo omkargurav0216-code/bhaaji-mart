@@ -6,7 +6,11 @@
         <h2 class="page-title" style="margin-bottom: 0.2rem;">Complete Your Payment</h2>
         <p style="color: var(--text-sub); margin: 0; font-size: 0.95rem;">Scan the QR code to finish checkout securely.</p>
     </div>
+    {% if pending_source == 'direct' %}
+    <a href="{{ url_for('new_order') }}" class="btn btn-small btn-muted">Back to Products</a>
+    {% else %}
     <a href="{{ url_for('cart') }}" class="btn btn-small btn-muted">Back to Cart</a>
+    {% endif %}
 </div>
 
 <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; align-items: start; margin-top: 1rem;">

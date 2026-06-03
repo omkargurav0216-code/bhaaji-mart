@@ -412,7 +412,20 @@ def new_order():
                 customer_address=customer_address
             )
 
-        return begin_stripe_checkout(items, customer_address, customer_name, source="direct")
+        payment_method = request.form.get("payment_method", "stripe")
+        if payment_method == 'qr':
+            total_amount = sum(item["total"] for item in items)
+            session['qr_pending'] = {
+                "customer_name": customer_name,
+                "customer_address": customer_address,
+                "items": items,
+                "total_amount": total_amount,
+                "source": "direct"
+            }
+            session.modified = True
+            return redirect(url_for('qr_payment'))
+        else:
+            return begin_stripe_checkout(items, customer_address, customer_name, source="direct")
     
     error = request.args.get("error")
     return render_template("new_order.html", products=products, error=error)
@@ -582,7 +595,7 @@ def checkout():
             "customer_address": customer_address,
             "items": checkout_items,
             "total_amount": total_amount,
-            "source": "qr"
+            "source": "cart"
         }
         session.modified = True
         return redirect(url_for('qr_payment'))
@@ -596,7 +609,7 @@ def qr_payment():
     pending = session.get('qr_pending')
     if not pending:
         flash('No pending QR payment found.')
-        return redirect(url_for('cart'))
+        return redirect(url_for('new_order'))
     if request.method == 'POST':
         # User confirms they have paid
         from backend.orders import create_order
@@ -611,12 +624,15 @@ def qr_payment():
                 payment_id="QR_" + pending["customer_address"],
                 payment_method="QR"
             )
-            clear_cart(current_user.id)
+            if pending.get("source") == "cart":
+                clear_cart(current_user.id)
             session.pop('qr_pending', None)
             flash('Payment received via QR. Order created.')
             return redirect(url_for('my_orders'))
         except ValueError as e:
             flash(str(e))
+            if pending.get("source") == "direct":
+                return redirect(url_for('new_order'))
             return redirect(url_for('cart'))
     # GET: generate QR code image
     from backend.qr_utils import generate_qr_code
@@ -631,9 +647,11 @@ def qr_payment():
     except Exception as e:
         logger.error(f"Failed to generate QR code: {e}")
         flash('Error generating QR code. Please try again.')
+        if pending.get("source") == "direct":
+            return redirect(url_for('new_order'))
         return redirect(url_for('cart'))
     session['qr_image'] = filename
-    return render_template('qr_payment.html', qr_filename=filename, total=pending['total_amount'], upi=upi_str)
+    return render_template('qr_payment.html', qr_filename=filename, total=pending['total_amount'], upi=upi_str, pending_source=pending.get('source'))
 
 def begin_stripe_checkout(checkout_items, customer_address, customer_name, source="cart"):
     total_amount = sum(item["total"] for item in checkout_items)
@@ -793,9 +811,13 @@ def logout():
 @customer_required
 def payment_success():
     stripe_session_id = request.args.get("session_id")
+    pending_checkout = session.get("pending_checkout") or {}
+    source = pending_checkout.get("source", "cart")
+    fallback_url = url_for('new_order') if source == "direct" else url_for('cart')
+
     if not stripe_session_id:
         flash("Missing Stripe payment session.")
-        return redirect(url_for('cart'))
+        return redirect(fallback_url)
 
     existing_order = get_order_by_payment_id(stripe_session_id, current_user.id)
     if existing_order:
@@ -807,33 +829,32 @@ def payment_success():
             stripe_session_id=stripe_session_id,
         )
 
-    pending_checkout = session.get("pending_checkout")
     if not pending_checkout:
         flash("Payment session expired. Please contact support if your card was charged.")
-        return redirect(url_for('cart'))
+        return redirect(fallback_url)
 
     if pending_checkout.get("stripe_session_id") != stripe_session_id:
         flash("Invalid payment session.")
-        return redirect(url_for('cart'))
+        return redirect(fallback_url)
 
     try:
         stripe_session = stripe.checkout.Session.retrieve(stripe_session_id)
     except Exception:
         flash("Could not verify the Stripe payment session.")
-        return redirect(url_for('cart'))
+        return redirect(fallback_url)
 
     if getattr(stripe_session, "payment_status", None) != "paid":
         flash("Payment was not completed.")
-        return redirect(url_for('cart'))
+        return redirect(fallback_url)
 
     if str(getattr(stripe_session, "client_reference_id", None)) != str(current_user.id):
         flash("Payment session does not match your account.")
-        return redirect(url_for('cart'))
+        return redirect(fallback_url)
 
     expected_amount = int(round(pending_checkout["total_amount"] * 100))
     if getattr(stripe_session, "amount_total", None) != expected_amount:
         flash("Payment amount verification failed.")
-        return redirect(url_for('cart'))
+        return redirect(fallback_url)
 
     order_items = [
         {
@@ -859,7 +880,7 @@ def payment_success():
         session.modified = True
     except ValueError as e:
         flash(str(e))
-        return redirect(url_for('cart'))
+        return redirect(fallback_url)
 
     order = get_order(order_id, current_user.id)
     details = get_order_details(order_id)
@@ -873,10 +894,11 @@ def payment_success():
 @app.route('/payment-cancel')
 @customer_required
 def payment_cancel():
-    flash("Payment cancelled. Your cart is still available.")
     pending_checkout = session.get("pending_checkout") or {}
     if pending_checkout.get("source") == "direct":
+        flash("Payment cancelled. Your order was not placed.")
         return redirect(url_for('new_order'))
+    flash("Payment cancelled. Your cart is still available.")
     return redirect(url_for('cart'))
 
 if __name__ == "__main__":

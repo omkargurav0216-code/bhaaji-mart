@@ -29,6 +29,20 @@
                     <textarea name="customer_address" rows="3" required placeholder="Enter delivery address">{{ customer_address or '' }}</textarea>
                 </div>
 
+                <div class="form-group" style="margin-top: 15px;">
+                    <label style="font-weight: 600; display: block; margin-bottom: 8px;">Select Payment Method</label>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;">
+                            <input type="radio" id="pm_stripe" name="payment_method" value="stripe" checked style="accent-color: var(--primary);">
+                            Pay with Stripe
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500;">
+                            <input type="radio" id="pm_qr" name="payment_method" value="qr" style="accent-color: var(--primary);">
+                            Pay with QR Code
+                        </label>
+                    </div>
+                </div>
+
                 <div style="margin-top: 20px; border-top: 2px solid #f0f0f0; padding-top: 20px;">
                     <div class="flex-between">
                         <span style="font-weight: 600; color: var(--text-sub);">Estimated Total:</span>
