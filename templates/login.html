@@ -22,8 +22,14 @@
             </div>
             <div class="form-group">
                 <label>Password</label>
-                <input type="password" name="password" required placeholder="Enter password"
-                    style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" required placeholder="Enter password">
+
+                    <button type="button" id="togglePassword" aria-label="Show Password">
+    <i data-lucide="eye"></i>
+</button>
+                </div>
             </div>
             <button type="submit" class="btn btn-block">
                 Login {% if is_admin %}as Admin{% endif %}

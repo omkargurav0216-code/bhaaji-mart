@@ -52,4 +52,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Active Nav Highlighting (Fallback if Jinja fails or for dynamic changes) ---
     // (Jinja handles most of this, but we can double check)
+
+    const toggle = document.getElementById('togglePassword');
+    const password = document.getElementById('password');
+
+    if (toggle && password) {
+        toggle.addEventListener('click', () => {
+
+            if (password.type === 'password') {
+                password.type = 'text';
+                toggle.innerHTML = '<i data-lucide="eye-off"></i>';
+            } else {
+                password.type = 'password';
+                toggle.innerHTML = '<i data-lucide="eye"></i>';
+            }
+
+            lucide.createIcons();
+        });
+    }
+
+
 });
