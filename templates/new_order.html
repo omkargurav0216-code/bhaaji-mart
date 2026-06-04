@@ -57,6 +57,20 @@
 
         <!-- Main: Product Grid -->
         <div class="main-content">
+            <!-- Category Filter Controls -->
+            <div class="category-filters" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; align-items: center;">
+                <span style="font-weight: 600; color: var(--text-sub); margin-right: 5px;">Category:</span>
+                {% for cat in ['All', 'Fruits', 'Vegetables', 'Dairy', 'Bakery', 'Beverages', 'Snacks'] %}
+                    {% set is_active = (current_category == cat) %}
+                    <a href="{{ url_for('new_order', category=(None if cat == 'All' else cat)) }}" 
+                       class="btn {% if is_active %}btn-primary{% else %}btn-muted{% endif %}"
+                       style="padding: 6px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: all 0.2s ease;
+                              {% if not is_active %}background: var(--bg-hover); color: var(--text-sub); border: 1px solid var(--border-color);{% endif %}">
+                       {{ cat }}
+                    </a>
+                {% endfor %}
+            </div>
+            {% if products %}
             <div class="product-grid"
                 style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px;">
                 {% for p in products %}
@@ -77,10 +91,29 @@
                             </div>
                             {% endif %}
                             {% if p.discount > 0 %}
-                            <div class="product-badge" style="position: absolute; top: 10px; right: 10px; background: #ef4444; color: #ffffff; font-size: 0.75em; font-weight: 700; padding: 4px 8px; border-radius: 6px; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3);">
+                            <div class="product-badge" style="position: absolute; top: 10px; right: 10px; background: #ef4444; color: #ffffff; font-size: 0.75em; font-weight: 700; padding: 4px 8px; border-radius: 6px; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.3); z-index: 2;">
                                 -{{ p.discount }}% OFF
                             </div>
                             {% endif %}
+                            {% set cat = p.category|default('Uncategorized') %}
+                            <div class="category-badge" style="position: absolute; top: 10px; left: 10px; font-size: 0.7em; font-weight: 700; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.15); z-index: 2;
+                                {% if cat == 'Fruits' %}
+                                    background: #ffedd5; color: #c2410c;
+                                {% elif cat == 'Vegetables' %}
+                                    background: #d1fae5; color: #047857;
+                                {% elif cat == 'Dairy' %}
+                                    background: #e0f2fe; color: #0369a1;
+                                {% elif cat == 'Bakery' %}
+                                    background: #fef3c7; color: #b45309;
+                                {% elif cat == 'Beverages' %}
+                                    background: #e0e7ff; color: #4338ca;
+                                {% elif cat == 'Snacks' %}
+                                    background: #f3e8ff; color: #6b21a8;
+                                {% else %}
+                                    background: #f3f4f6; color: #4b5563;
+                                {% endif %}">
+                                {{ cat }}
+                            </div>
                         </div>
                         <div
                             style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
@@ -136,6 +169,16 @@
                 </div>
                 {% endfor %}
             </div>
+            {% else %}
+            <div class="card" style="text-align: center; padding: 40px 20px; color: var(--text-sub); border: 1px dashed var(--border-color); background: transparent; margin-top: 10px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 12px; color: #cbd5e1; display: inline-block;">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="8" y1="12" x2="16" y2="12"></line>
+                </svg>
+                <h3 style="margin-top: 0; color: var(--text-main);">No products found</h3>
+                <p style="margin: 0; font-size: 0.95em;">There are no products listed under the <strong>{{ current_category }}</strong> category currently.</p>
+            </div>
+            {% endif %}
         </div>
     </div>
 </form>

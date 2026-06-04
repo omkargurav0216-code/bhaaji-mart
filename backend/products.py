@@ -1,17 +1,20 @@
 from backend.db import get_connection
 
-def add_product(name, price, unit, stock=0, discount=0, image_url=None):
+def add_product(name, price, unit, stock=0, discount=0, image_url=None, category='Uncategorized'):
     conn = get_connection()
     conn.execute(
-        "INSERT INTO products (name, price, unit, stock, discount, image_url) VALUES (?, ?, ?, ?, ?, ?)",
-        (name, price, unit, stock, discount, image_url)
+        "INSERT INTO products (name, price, unit, stock, discount, image_url, category) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        (name, price, unit, stock, discount, image_url, category)
     )
     conn.commit()
     conn.close()
 
-def get_all_products():
+def get_all_products(category=None):
     conn = get_connection()
-    products = conn.execute("SELECT * FROM products").fetchall()
+    if category and category.lower() != 'all':
+        products = conn.execute("SELECT * FROM products WHERE category = ?", (category,)).fetchall()
+    else:
+        products = conn.execute("SELECT * FROM products").fetchall()
     conn.close()
     return products
 
@@ -29,26 +32,25 @@ def get_product(product_id):
     conn.close()
     return product
 
-def update_product(product_id, name, price, unit, stock, discount, image_url=None, remove_image=False):
+def update_product(product_id, name, price, unit, stock, discount, image_url=None, remove_image=False, category='Uncategorized'):
     conn = get_connection()
     if remove_image:
         conn.execute("""
             UPDATE products
-            SET name = ?, price = ?, unit = ?, stock = ?, discount = ?, image_url = NULL
+            SET name = ?, price = ?, unit = ?, stock = ?, discount = ?, image_url = NULL, category = ?
             WHERE product_id = ?
-        """, (name, price, unit, stock, discount, product_id))
+        """, (name, price, unit, stock, discount, category, product_id))
     elif image_url is not None:
         conn.execute("""
             UPDATE products
-            SET name = ?, price = ?, unit = ?, stock = ?, discount = ?, image_url = ?
+            SET name = ?, price = ?, unit = ?, stock = ?, discount = ?, image_url = ?, category = ?
             WHERE product_id = ?
-        """, (name, price, unit, stock, discount, image_url, product_id))
+        """, (name, price, unit, stock, discount, image_url, category, product_id))
     else:
         conn.execute("""
             UPDATE products
-            SET name = ?, price = ?, unit = ?, stock = ?, discount = ?
+            SET name = ?, price = ?, unit = ?, stock = ?, discount = ?, category = ?
             WHERE product_id = ?
-        """, (name, price, unit, stock, discount, product_id))
+        """, (name, price, unit, stock, discount, category, product_id))
     conn.commit()
     conn.close()
-

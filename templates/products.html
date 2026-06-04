@@ -43,6 +43,19 @@
                 </div>
 
                 <div class="form-group">
+                    <label>Category</label>
+                    <select name="category" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; font-family: inherit; background-color: var(--surface); color: var(--text-main);">
+                        <option value="Fruits">Fruits</option>
+                        <option value="Vegetables">Vegetables</option>
+                        <option value="Dairy">Dairy</option>
+                        <option value="Bakery">Bakery</option>
+                        <option value="Beverages">Beverages</option>
+                        <option value="Snacks">Snacks</option>
+                        <option value="Uncategorized">Uncategorized</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
                     <label>Product Image</label>
                     <input type="file" name="product_image" accept=".png, .jpg, .jpeg, .webp">
                 </div>
@@ -60,6 +73,7 @@
                         <th>ID</th>
                         <th>Image</th>
                         <th>Product</th>
+                        <th>Category</th>
                         <th>Unit</th>
                         <th>Stock</th>
                         <th>Price</th>
@@ -85,6 +99,24 @@
                             <strong>{{ product.name }}</strong>
                             {% if product.discount > 0 %}
                             <div class="discount-note">{{ product.discount }}% discount active</div>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% set cat = product.category|default('Uncategorized') %}
+                            {% if cat == 'Fruits' %}
+                            <span class="tag" style="background: #ffedd5; color: #c2410c; border: none; font-size: 0.75em; font-weight: 700;">Fruits</span>
+                            {% elif cat == 'Vegetables' %}
+                            <span class="tag" style="background: #d1fae5; color: #047857; border: none; font-size: 0.75em; font-weight: 700;">Vegetables</span>
+                            {% elif cat == 'Dairy' %}
+                            <span class="tag" style="background: #e0f2fe; color: #0369a1; border: none; font-size: 0.75em; font-weight: 700;">Dairy</span>
+                            {% elif cat == 'Bakery' %}
+                            <span class="tag" style="background: #fef3c7; color: #b45309; border: none; font-size: 0.75em; font-weight: 700;">Bakery</span>
+                            {% elif cat == 'Beverages' %}
+                            <span class="tag" style="background: #e0e7ff; color: #4338ca; border: none; font-size: 0.75em; font-weight: 700;">Beverages</span>
+                            {% elif cat == 'Snacks' %}
+                            <span class="tag" style="background: #f3e8ff; color: #6b21a8; border: none; font-size: 0.75em; font-weight: 700;">Snacks</span>
+                            {% else %}
+                            <span class="tag" style="background: #f3f4f6; color: #4b5563; border: none; font-size: 0.75em; font-weight: 700;">{{ cat }}</span>
                             {% endif %}
                         </td>
                         <td>{{ product.unit }}</td>

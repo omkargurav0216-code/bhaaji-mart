@@ -366,7 +366,8 @@ def products():
             request.form["unit"],
             float(request.form.get("stock", 0)), # type: ignore
             float(request.form.get("discount", 0)), # type: ignore
-            image_url=image_url
+            image_url=image_url,
+            category=request.form.get("category", "Uncategorized")
         )
         return redirect("/products?success=product_added")
 
@@ -428,7 +429,9 @@ def new_order():
             return begin_stripe_checkout(items, customer_address, customer_name, source="direct")
     
     error = request.args.get("error")
-    return render_template("new_order.html", products=products, error=error)
+    category = request.args.get("category")
+    filtered_products = get_all_products(category=category)
+    return render_template("new_order.html", products=filtered_products, error=error, current_category=category or 'All')
 
 @app.route("/order/<int:order_id>")
 @login_required
@@ -494,7 +497,8 @@ def edit_product(product_id):
             float(request.form.get("stock", 0)),
             float(request.form.get("discount", 0)),
             image_url=image_url,
-            remove_image=remove_image
+            remove_image=remove_image,
+            category=request.form.get("category", "Uncategorized")
         )
         return redirect("/products")
 

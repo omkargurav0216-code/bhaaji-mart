@@ -26,7 +26,8 @@ def create_tables():
         unit TEXT NOT NULL,
         stock REAL NOT NULL DEFAULT 0 CHECK(stock >= 0),
         discount REAL NOT NULL DEFAULT 0 CHECK(discount >= 0 AND discount <= 100),
-        image_url TEXT
+        image_url TEXT,
+        category TEXT DEFAULT 'Uncategorized'
     )
     """)
 
@@ -35,6 +36,8 @@ def create_tables():
     }
     if "image_url" not in product_columns:
         cursor.execute("ALTER TABLE products ADD COLUMN image_url TEXT")
+    if "category" not in product_columns:
+        cursor.execute("ALTER TABLE products ADD COLUMN category TEXT DEFAULT 'Uncategorized'")
 
     # ORDERS TABLE
     cursor.execute("""
